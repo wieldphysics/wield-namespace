@@ -45,7 +45,7 @@ def version_checker(version_string, module_name):
                 pass
             else:
                 if not git_tag.endswith(version_string):
-                    if git_tag.startswith(version_string):
+                    if version_string in git_tag:
                         print("WARNING: latex git-tag has commits since versioning", file = sys.stderr)
                         print("         '{0}' ---> '{1}'".format(version_string, git_tag), file=sys.stderr)
                     else:
