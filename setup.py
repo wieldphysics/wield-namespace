@@ -6,7 +6,7 @@ import setup_helper
 
 version = '0.0.1'
 
-cmdclass = setup_helper.version_checker(version, 'wavestate')
+cmdclass = setup_helper.version_checker(version, 'wavestate.collection')
 
 setup(
     version          = version,
