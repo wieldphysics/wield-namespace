@@ -7,3 +7,12 @@
 # with details inline in source files, comments, and docstrings.
 """
 """
+
+from .version import version, __version__, version_info
+
+
+__all__ = [
+    'version',
+    '__version__',
+    'version_info',
+]
