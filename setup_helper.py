@@ -44,6 +44,7 @@ def version_checker(version_string, module_name):
             except subprocess.CalledProcessError:
                 pass
             else:
+                print("SETUP_HELPER", git_tag, version_string)
                 if not git_tag.endswith(version_string):
                     if version_string in git_tag:
                         print("WARNING: latex git-tag has commits since versioning", file = sys.stderr)

@@ -6,11 +6,18 @@
 # NOTICE: authors should document their contributions in concisely in NOTICE
 # with details inline in source files, comments, and docstrings.
 """ Setup and build the wavestate.collection package, which acts as the metapackage
-"""
-from setuptools import find_packages, setup
-import setup_helper
 
-# Packaging guidance may be found at https://packaging.python.org/tutorials/packaging-projects/
+Packaging guidance may be found at https://packaging.python.org/tutorials/packaging-projects/
+"""
+import sys
+import os
+from setuptools import find_packages, setup
+
+# this is a fix for running within the pypa build package
+# it ensures that only the local setup_helper is imported
+# it preprends this file's path to the import path
+sys.path[0:0] = [os.path.dirname(os.path.abspath(__file__))]
+import setup_helper  # noqa
 
 version = '0.0.1'
 
