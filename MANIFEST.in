@@ -11,6 +11,5 @@ include README.md
 include MANIFEST.in
 include setup.cfg
 include setup.py
-include setup_helper.py
 
-recursive-include test/ *.py
+recursive-include tools/ *.py
