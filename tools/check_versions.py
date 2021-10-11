@@ -17,6 +17,7 @@ import sys
 import subprocess
 import configparser
 import importlib
+import re
 from pkg_resources import parse_version
 
 fpath = os.path.dirname(os.path.abspath(__file__))
@@ -47,7 +48,10 @@ def check_versions():
         git_tag = git_tag.strip()
         git_tag = str(git_tag.decode('utf-8'))
         # remove things like release- or devel- or version- from the start
-        git_tag = git_tag.split('-', 1)[-1]
+        print(git_tag)
+        match_digit = re.search(r'\d', git_tag)
+        git_tag = git_tag[match_digit.start():]
+        print(git_tag)
     except subprocess.CalledProcessError:
         pass
     else:
