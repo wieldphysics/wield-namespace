@@ -17,11 +17,24 @@ __version__ = __version__ + '-<unknown>'
 
 try:
     import setuptools_scm
-    __version__ = setuptools_scm.get_version(
+    from pkg_resources import parse_version
+
+    scm_version = setuptools_scm.get_version(
         relative_to=__file__,
         root='../../../',
-        fallback_version=__version__
+        fallback_version=__version__,
+        version_scheme='guess-next-dev',
     )
+
+    scm_v = parse_version(parse_version(scm_version).base_version)
+    version_v = parse_version(parse_version(version).base_version)
+
+    if scm_v != version_v:
+        import warnings
+        warnings.warn('git base version {} is different than the stored version {}'.format(scm_v, version_v))
+
+    version = scm_version
+    __version__ = scm_version
 # FIXME: fallback_version is not available in the buster version
 # (3.2.0-1)
 except (ModuleNotFoundError, TypeError, LookupError):
