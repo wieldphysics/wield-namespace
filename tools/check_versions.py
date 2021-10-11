@@ -17,6 +17,7 @@ import sys
 import subprocess
 import configparser
 import importlib
+from pkg_resources import parse_version
 
 fpath = os.path.dirname(os.path.abspath(__file__))
 config = configparser.ConfigParser()
@@ -27,9 +28,10 @@ version_string = config['metadata']['version']
 modfile = config['tools.check_versions']['version_file']
 
 # import the specified file as the 'version' module
-spec = importlib.util.spec_from_file_location('version', modfile)
+spec = importlib.util.spec_from_file_location('version', os.path.join(fpath, '..', modfile))
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+
 
 def check_versions():
     exit = None
@@ -47,8 +49,11 @@ def check_versions():
     except subprocess.CalledProcessError:
         pass
     else:
-        print("SETUP_HELPER", git_tag, version_string)
-        if not git_tag.endswith(version_string):
+        if 'dev' in version_string:
+            if parse_version(git_tag) > parse_version(version_string):
+                print("WARNING: latex git-tag {} is newer than dev version {}".format(git_tag, version_string), file = sys.stderr)
+                exit = -3
+        elif not git_tag.endswith(version_string):
             if version_string in git_tag:
                 print("WARNING: latex git-tag has commits since versioning", file = sys.stderr)
                 print("         '{0}' ---> '{1}'".format(version_string, git_tag), file=sys.stderr)
@@ -57,10 +62,9 @@ def check_versions():
                 print("         '{0}' != '{1}'".format(version_string, git_tag), file=sys.stderr)
             print("         Perhaps update versions in setup.py and module.version, git commit, then git tag")
             print("         otherwise fix tag if not yet git pushed to remote (see DISTRIBUTION-README.md)")
-            exit = -1
+            exit = -2
 
     return exit
-
 
 
 if __name__ == '__main__':

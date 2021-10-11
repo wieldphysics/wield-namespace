@@ -18,4 +18,3 @@ setup(
         'setuptools >= 45.0.0',
     ],
 )
-
