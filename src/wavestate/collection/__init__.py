@@ -8,7 +8,7 @@
 """
 """
 
-from .version import version, __version__, version_info
+from ._version import version, __version__, version_info
 
 
 __all__ = [

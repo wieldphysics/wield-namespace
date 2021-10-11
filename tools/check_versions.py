@@ -19,6 +19,7 @@ import configparser
 import importlib
 import re
 from pkg_resources import parse_version
+from packaging.version import LegacyVersion
 
 fpath = os.path.dirname(os.path.abspath(__file__))
 config = configparser.ConfigParser()
@@ -44,9 +45,11 @@ def check_versions():
         exit = -1
 
     try:
-        git_tag = subprocess.check_output(['git', 'describe', '--tags'])
+        git_tag = subprocess.check_output(['git', 'describe', '--tags', '--always'])
         git_tag = git_tag.strip()
         git_tag = str(git_tag.decode('utf-8'))
+        print('version string:', version_string, '  --------  git tag:', git_tag)
+
         # remove things like release- or devel- or version- from the start
         match_digit = re.search(r'\d', git_tag)
         git_tag = git_tag[match_digit.start():]
@@ -54,7 +57,11 @@ def check_versions():
         pass
     else:
         if 'dev' in version_string:
-            if parse_version(git_tag) > parse_version(version_string):
+            p_git_tag = parse_version(git_tag)
+            # if the version cannot be parsed, then don't check it
+            if isinstance(p_git_tag, LegacyVersion):
+                return exit
+            elif parse_version(git_tag) > parse_version(version_string):
                 print("WARNING: latex git-tag {} is newer than dev version {}".format(git_tag, version_string), file = sys.stderr)
                 exit = -3
         elif not git_tag.endswith(version_string):
