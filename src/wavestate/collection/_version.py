@@ -8,7 +8,7 @@
 """
 """
 
-version_info = (0, 0, 2, 'dev1')
+version_info = (0, 0, 3, 'dev0')
 version = '.'.join(str(v) for v in version_info)
 __version__ = version
 
@@ -35,7 +35,8 @@ try:
 
     version = scm_version
     __version__ = scm_version
-# FIXME: fallback_version is not available in the buster version
-# (3.2.0-1)
+except ValueError as e:
+    import warnings
+    warnings.warn(str(e))
 except (ModuleNotFoundError, TypeError, LookupError):
     pass
