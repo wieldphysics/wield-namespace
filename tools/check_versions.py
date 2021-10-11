@@ -48,10 +48,8 @@ def check_versions():
         git_tag = git_tag.strip()
         git_tag = str(git_tag.decode('utf-8'))
         # remove things like release- or devel- or version- from the start
-        print(git_tag)
         match_digit = re.search(r'\d', git_tag)
         git_tag = git_tag[match_digit.start():]
-        print(git_tag)
     except subprocess.CalledProcessError:
         pass
     else:
